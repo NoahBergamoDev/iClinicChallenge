@@ -1,5 +1,3 @@
-import { useNavigation } from '@react-navigation/native'
-import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import React from 'react'
 import { FC } from 'react'
 import { useState } from 'react'
@@ -8,23 +6,29 @@ import Button from '../../components/button/Button'
 import Input from '../../components/input/Input'
 import Title from '../../components/title/Title'
 import { colors } from '../../utils/colors'
+import { authenticate } from './service/service'
 
 interface Props {
     navigation: any
 }
 
 const LoginScreen: FC<Props> = (props) => {
-
-    const [email, setEmail] = useState<string>('')
-    const [password, setPassword] = useState<string>('')
+    const [email, setEmail] = useState<string>('unclebob@gmail.com')
+    const [password, setPassword] = useState<string>('unclebob')
     const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
-    const login = () => {
+    const login = async () => {
         if (!email.length || !password.length) {
             setErrorMessage('Favor preencher os campos.')
             return
         }
-        props.navigation.navigate('MainStack')
+        const authenticatedUser = await authenticate(email, password)
+        if (authenticatedUser) {
+            props.navigation.navigate('MainStack')
+        }
+        else {
+            setErrorMessage('Usuário e/ou senha inválidos')
+        }
     }
 
     const handleInput = (text: string, state: string) => {

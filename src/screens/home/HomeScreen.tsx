@@ -1,11 +1,14 @@
-import React from 'react'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { NavigationProp } from '@react-navigation/native'
+import React, { useEffect } from 'react'
 import { FC } from 'react'
 import { View, Text } from 'react-native'
 import Button from '../../components/button/Button'
 import Title from '../../components/title/Title'
+import { navigationConstants } from '../../navigation/constants'
 
 interface Props {
-    navigation: any
+    navigation: NavigationProp<any>
 }
 
 interface Button {
@@ -16,11 +19,25 @@ interface Button {
 
 const HomeScreen: FC<Props> = ({ navigation }) => {
 
+    useEffect(() => {
+        verifyLogin()
+    }, [])
+
+    const logout = async () => {
+        await AsyncStorage.clear();
+        navigation.navigate(navigationConstants.STACKS.AUTH)
+    }
+
+    const verifyLogin = async () => {
+        const isLoggedIn = await AsyncStorage.getItem('@accessToken') != null
+        if (!isLoggedIn) navigation.navigate(navigationConstants.STACKS.AUTH)
+
+    }
     const buttons: Button[] = [
         { id: 0, label: '+ Prescrição (React Native)', onPress: () => navigation.navigate('PrescriptionStack') },
         { id: 1, label: '+ Médico (Android Nativo)', onPress: () => { } },
         { id: 2, label: '+ Paciente (iOS Nativo)', onPress: () => { } },
-        { id: 3, label: 'Sair', onPress: () => navigation.navigate('AuthStack') }
+        { id: 3, label: 'Sair', onPress: logout }
     ]
 
     return (

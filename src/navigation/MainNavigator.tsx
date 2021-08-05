@@ -1,19 +1,19 @@
 import React from 'react'
 import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import AuthStackComponent from './AuthStack';
 import MainStackComponent from './MainStack';
+import { navigationConstants } from './constants';
 
-
-const AppStack = createNativeStackNavigator();
+const AppStack = createStackNavigator();
 
 const MainNavigator = () => {
 
     return (
         <NavigationContainer>
-            <AppStack.Navigator screenOptions={{ headerShown: false }}>
-                <AppStack.Screen name='AuthStack' component={AuthStackComponent} />
-                <AppStack.Screen name='MainStack' component={MainStackComponent} />
+            <AppStack.Navigator screenOptions={{ headerShown: false }} initialRouteName={navigationConstants.STACKS.MAIN}>
+                <AppStack.Screen name={navigationConstants.STACKS.AUTH} component={AuthStackComponent} />
+                <AppStack.Screen name={navigationConstants.STACKS.MAIN} component={MainStackComponent} />
             </AppStack.Navigator>
         </NavigationContainer>
     )

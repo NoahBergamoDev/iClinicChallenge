@@ -1,13 +1,18 @@
 import React from 'react'
+import { FC } from 'react';
 import { View, Text } from 'react-native'
 
 interface Props {
-    text: string
+    text: string;
+    left?: boolean
 }
 
-const Title = (props: Props) => {
+const Title: FC<Props> = (props) => {
+    const { left } = props;
     return (
-        <Text style={{ fontSize: 26, fontWeight: 'bold', alignSelf: 'center', marginVertical: 24 }}>{props.text}</Text>
+        <Text style={{
+            fontSize: 26, fontWeight: 'bold', marginVertical: 24, alignSelf: left ? 'flex-start' : 'center'
+        }}>{props.text}</Text>
     )
 }
 

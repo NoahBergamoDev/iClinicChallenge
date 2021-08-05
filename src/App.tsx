@@ -3,7 +3,9 @@ import MainNavigator from './navigation/MainNavigator';
 
 
 const App = () => {
-  return <MainNavigator />
+  return (
+    <MainNavigator />
+  )
 };
 
 
