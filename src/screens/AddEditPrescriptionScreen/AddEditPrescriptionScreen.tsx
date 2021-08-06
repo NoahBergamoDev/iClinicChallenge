@@ -1,12 +1,13 @@
 import { NavigationProp, Route } from '@react-navigation/native'
 import React, { useEffect, useState } from 'react'
 import { FC } from 'react'
-import { View, Text } from 'react-native'
+import { KeyboardAvoidingView, Text, View } from 'react-native'
 import Button from '../../components/button/Button'
 import Input from '../../components/input/Input'
-import { editPrescription } from './services'
-import { Patient, Physician, Prescription } from '../precriptionList/types/PrescriptionTypes'
-
+import { getPatients, getPhysicians, submitPrescription } from './services'
+import { Patient, Physician } from '../precriptionList/types/PrescriptionTypes'
+import AutocompleteInput from '../../components/autocompleteInput/AutocompleteInput'
+import { colors } from '../../utils/colors'
 interface Props {
     route: Route<any, any>;
     navigation: NavigationProp<any, any>
@@ -19,8 +20,13 @@ const AddEditPrescriptionScreen: FC<Props> = (props) => {
     const [patientName, setPatientName] = useState<string>('')
     const [patient, setPatient] = useState<Patient>()
 
+    const [patients, setPatients] = useState<Patient[]>([])
+    const [physicians, setPhysicians] = useState<Physician[]>([])
+
     const [physicianName, setPhysicianName] = useState<string>('')
     const [physician, setPhysician] = useState<Physician>()
+
+    const [errorMessage, setErrorMessage] = useState<string>('')
 
     const isEditing = params?.editPrescription
 
@@ -28,6 +34,8 @@ const AddEditPrescriptionScreen: FC<Props> = (props) => {
         navigation.setOptions({
             headerTitle: isEditing ? 'Alterar Prescrição' : 'Adicionar Prescrição'
         })
+        fetchPatients()
+        fetchPhysicians()
         if (params?.patient) {
             setPatientName(params.patient.name)
             setPatient(params.patient)
@@ -39,23 +47,60 @@ const AddEditPrescriptionScreen: FC<Props> = (props) => {
         if (params?.description) setDescription(params.description)
     }, [])
 
+    const fetchPatients = async () => {
+        const response = await getPatients()
+        if (response) setPatients(response)
+    }
+    const fetchPhysicians = async () => {
+        const response = await getPhysicians()
+        if (response) setPhysicians(response)
+    }
 
     const submitData = async () => {
-        if (isEditing) {
-            editPrescription(patient?.id, physician?.id, description, params?.prescriptionId)
+        if (!patient || !physician || !description) {
+            setErrorMessage('Todos os campos são obrigatórios')
+            return
         }
-        // createPrescription({ clinic_id: 0, patient_id: patient?.id, physician_id: physician?.id, text: description })
+        const status = await submitPrescription(patient?.id, physician?.id, description, params?.prescriptionId, !isEditing);
+        if (status === 200) {
+            navigation.goBack()
+            return
+        }
+        setErrorMessage(`Ocorreu um erro ao tentar gravar os dados. - Erro - ${status}`)
     }
+
+    const isPatient = (person: Patient | Physician) => {
+        return (person as Patient).phone !== undefined
+    }
+
+    const handleSelection = (item: Physician | Patient) => {
+        setErrorMessage('')
+        if (isPatient(item)) {
+            setPatientName(item.name)
+            setPatient(item as Patient)
+            return
+        }
+
+        setPhysicianName(item.name)
+        setPhysician(item as Physician)
+        return
+    }
+
+    const renderError = () => <Text style={{ color: colors.RED, fontSize: 18, fontWeight: 'bold', marginTop: 8 }}>{errorMessage}</Text>
 
 
     return (
-        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-            <Input label='Médico' onChangeText={(text) => setPhysicianName(text)} value={physicianName} disabled={isEditing} />
-            <Input label='Paciente' onChangeText={(text) => setPatientName(text)} value={patientName} disabled={isEditing} />
+        <KeyboardAvoidingView style={{ flex: 1, alignItems: 'center', paddingVertical: 20 }}>
+            <AutocompleteInput data={patients} inputText={patientName} onSelect={handleSelection} label='Pacientes' disabled={isEditing} />
+            <View style={{ height: 16 }} />
+            <AutocompleteInput data={physicians} inputText={physicianName} onSelect={handleSelection} label='Médicos' disabled={isEditing} />
+            <View style={{ height: 16 }} />
             <Input label='Descrição' onChangeText={(text) => setDescription(text)} value={description} multiline bigTextBox />
+            {errorMessage != '' ? renderError() : null}
             <Button label='Salvar' onPress={submitData} />
-            <Button label='Cancelar' onPress={() => console.log('cancelar')} />
-        </View>
+            <Button label='Cancelar' onPress={() => navigation.goBack()} />
+
+        </KeyboardAvoidingView >
     )
 }
 

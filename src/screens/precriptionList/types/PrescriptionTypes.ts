@@ -6,18 +6,18 @@ export interface Clinic {
 }
 
 export interface Patient {
-  id: number | undefined;
+  id: number;
   email: string | undefined;
-  name: string | undefined;
+  name: string;
   phone: string | undefined;
   created_at?: string | undefined;
   updated_at?: string | undefined;
 }
 
 export interface Physician {
-  id: number | undefined;
+  id: number;
   crm: string | undefined;
-  name: string | undefined;
+  name: string;
   created_at?: string | undefined;
   updated_at?: string | undefined;
 }
