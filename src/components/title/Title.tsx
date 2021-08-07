@@ -1,19 +1,16 @@
 import React from 'react'
-import { FC } from 'react';
-import { View, Text } from 'react-native'
+import { FC } from 'react'
+import { Text } from 'react-native'
+import { TitleText } from './style'
 
 interface Props {
-    text: string;
+    text: string
     left?: boolean
 }
 
-const Title: FC<Props> = (props) => {
-    const { left } = props;
-    return (
-        <Text style={{
-            fontSize: 26, fontWeight: 'bold', marginVertical: 24, alignSelf: left ? 'flex-start' : 'center'
-        }}>{props.text}</Text>
-    )
+const Title: FC<Props> = props => {
+    const { left } = props
+    return <TitleText left={left}>{props.text}</TitleText>
 }
 
 export default Title

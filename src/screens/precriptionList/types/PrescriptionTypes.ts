@@ -31,10 +31,10 @@ export interface Prescription {
 
 export interface PrescriptionDetails {
   id: number | undefined;
-  clinic_id: number | undefined;
-  patient_id: number | undefined;
-  physician_id: number | undefined;
-  text: string | undefined;
+  clinic_id: number;
+  patient_id: number;
+  physician_id: number;
+  text: string;
   created_at?: string | undefined;
   updated_at?: string | undefined;
 }

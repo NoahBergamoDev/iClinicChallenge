@@ -4,23 +4,31 @@ import { useState } from 'react'
 import { FC } from 'react'
 import { View, Text } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
-import Button from '../../components/button/Button'
-import Title from '../../components/title/Title'
+import { Title, Button } from '../../components/'
 import { navigationConstants } from '../../navigation/constants'
-import { Patient, Physician, PrescriptionDetails } from '../precriptionList/types/PrescriptionTypes'
+import {
+    Patient,
+    Physician,
+    PrescriptionDetails,
+} from '../precriptionList/types/PrescriptionTypes'
 import { getPatient, getPrescriptionDetails } from './services'
 
 interface Props {
-    prescriptionId: number,
-    route: any,
+    prescriptionId: number
+    route: any
     navigation: NavigationProp<any, any>
 }
 
-const PrescriptionDetail: FC<Props> = (props) => {
-    const { navigation, route: { params: { prescriptionId, crm } } } = props
-    const [text, setText] = useState<string>('');
-    const [patient, setPatient] = useState<Patient | null>(null);
-    const [physician, setPhysician] = useState<Physician | null>(null);
+const PrescriptionDetail: FC<Props> = props => {
+    const {
+        navigation,
+        route: {
+            params: { prescriptionId, crm },
+        },
+    } = props
+    const [text, setText] = useState<string>('')
+    const [patient, setPatient] = useState<Patient | null>(null)
+    const [physician, setPhysician] = useState<Physician | null>(null)
 
     useEffect(() => {
         getDetails()
@@ -36,7 +44,9 @@ const PrescriptionDetail: FC<Props> = (props) => {
     }
 
     const getDetails = async () => {
-        const response: PrescriptionDetails = await getPrescriptionDetails(prescriptionId)
+        const response: PrescriptionDetails = await getPrescriptionDetails(
+            prescriptionId
+        )
         if (response) {
             setText(response.text)
             getPatientData(response.patient_id)
@@ -44,7 +54,13 @@ const PrescriptionDetail: FC<Props> = (props) => {
         }
     }
     return (
-        <View style={{ flex: 1, marginHorizontal: 16, justifyContent: 'space-between' }}>
+        <View
+            style={{
+                flex: 1,
+                marginHorizontal: 16,
+                justifyContent: 'space-between',
+            }}
+        >
             <ScrollView>
                 <Title text='Médico' left />
                 <Text>CRM: {crm.split('-')[1]}</Text>
@@ -61,18 +77,23 @@ const PrescriptionDetail: FC<Props> = (props) => {
             <View style={{ alignItems: 'center' }}>
                 <Button
                     label='Alterar'
-                    onPress={() => navigation.navigate(
-                        navigationConstants.SCREENS.ADD_EDIT_PRESCRIPTION,
-                        {
-                            editPrescription: true,
-                            prescriptionId: prescriptionId,
-                            physician: physician,
-                            patient: patient,
-                            description: text
-                        })} />
+                    onPress={() =>
+                        navigation.navigate(
+                            navigationConstants.SCREENS.ADD_EDIT_PRESCRIPTION,
+                            {
+                                editPrescription: true,
+                                prescriptionId: prescriptionId,
+                                physician: physician,
+                                patient: patient,
+                                description: text,
+                            }
+                        )
+                    }
+                />
                 <Button
                     label='Excluir'
-                    onPress={() => console.log('excluir')} />
+                    onPress={() => console.log('excluir')}
+                />
             </View>
         </View>
     )

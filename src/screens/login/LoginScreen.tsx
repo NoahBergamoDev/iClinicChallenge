@@ -1,18 +1,15 @@
 import React from 'react'
 import { FC } from 'react'
 import { useState } from 'react'
-import { View, Text } from 'react-native'
-import Button from '../../components/button/Button'
-import Input from '../../components/input/Input'
-import Title from '../../components/title/Title'
-import { colors } from '../../utils/colors'
-import { authenticate } from './service/service'
+import { Button, Input, Title } from '../../components/'
+import { Container, ErrorText } from './styles'
+import { authenticate } from './services/services'
 
 interface Props {
     navigation: any
 }
 
-const LoginScreen: FC<Props> = (props) => {
+const LoginScreen: FC<Props> = props => {
     const [email, setEmail] = useState<string>('unclebob@gmail.com')
     const [password, setPassword] = useState<string>('unclebob')
     const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -25,14 +22,13 @@ const LoginScreen: FC<Props> = (props) => {
         const authenticatedUser = await authenticate(email, password)
         if (authenticatedUser) {
             props.navigation.navigate('MainStack')
-        }
-        else {
+        } else {
             setErrorMessage('Usuário e/ou senha inválidos')
         }
     }
 
     const handleInput = (text: string, state: string) => {
-        setErrorMessage(null);
+        setErrorMessage(null)
         switch (state) {
             case 'email':
                 setEmail(text)
@@ -44,13 +40,25 @@ const LoginScreen: FC<Props> = (props) => {
     }
 
     return (
-        <View style={{ flex: 1, marginHorizontal: 16, alignItems: 'center' }}>
+        <Container>
             <Title text='Mobile Challenge' />
-            <Input onChangeText={(text) => handleInput(text, 'email')} value={email} label='Login' keyboardType={'email-address'} />
-            <Input onChangeText={(text) => handleInput(text, 'password')} value={password} label='Senha' secureTextEntry />
-            {errorMessage != null && errorMessage != '' && <Text style={{ fontSize: 20, fontWeight: 'bold', color: colors.RED }}>{errorMessage}</Text>}
+            <Input
+                onChangeText={text => handleInput(text, 'email')}
+                value={email}
+                label='Login'
+                keyboardType={'email-address'}
+            />
+            <Input
+                onChangeText={text => handleInput(text, 'password')}
+                value={password}
+                label='Senha'
+                secureTextEntry
+            />
+            {errorMessage != null && errorMessage != '' && (
+                <ErrorText>{errorMessage}</ErrorText>
+            )}
             <Button onPress={login} label='Login' />
-        </View>
+        </Container>
     )
 }
 
