@@ -6,7 +6,7 @@ const App = () => {
     return (
         <>
             <MainNavigator />
-            <Toast ref={ref => Toast.setRef(ref)} visibilityTime={5000} />
+            <Toast ref={ref => Toast.setRef(ref)} visibilityTime={5000} position='bottom'/>
         </>
     )
 }

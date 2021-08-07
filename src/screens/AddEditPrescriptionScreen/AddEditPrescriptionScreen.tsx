@@ -1,14 +1,22 @@
 import React, { FC, useEffect, useState } from 'react'
-import { NavigationProp, Route } from '@react-navigation/native'
+import { NavigationProp, RouteProp } from '@react-navigation/native'
 
 import { Patient, Physician } from '../../utils/types/Types'
 import { Button, Input, AutocompleteInput } from '../../components/'
 import { getPatients, getPhysicians, submitPrescription } from './services'
 import { AutoCompletesContainer, ButtonContainer, Container } from './styles'
+import Toast from 'react-native-toast-message'
+import { Alert } from 'react-native'
 
 interface Props {
-    route: Route<any, any>
-    navigation: NavigationProp<any, any>
+    route: RouteProp<any>
+    navigation: NavigationProp<any>
+}
+
+interface InitialDataType {
+    patientName: string
+    physicianName: string
+    description: string
 }
 
 const AddEditPrescriptionScreen: FC<Props> = props => {
@@ -20,6 +28,8 @@ const AddEditPrescriptionScreen: FC<Props> = props => {
     const [description, setDescription] = useState<string>('')
     const [isFirstLoad, setIsFirstLoad] = useState<boolean>(true)
 
+    const [initialData, setInitialData] = useState<InitialDataType>()
+
     const [patientName, setPatientName] = useState<string>('')
     const [patient, setPatient] = useState<Patient>()
 
@@ -29,7 +39,7 @@ const AddEditPrescriptionScreen: FC<Props> = props => {
     const [physicianName, setPhysicianName] = useState<string>('')
     const [physician, setPhysician] = useState<Physician>()
 
-    const [errorMessage, setErrorMessage] = useState<string>('')
+    const [loading, setLoading] = useState<boolean>(false)
 
     const isEditing = params?.editPrescription
 
@@ -41,19 +51,31 @@ const AddEditPrescriptionScreen: FC<Props> = props => {
                     ? 'Alterar Prescrição'
                     : 'Adicionar Prescrição',
             })
+            // navigation.setParams({checkIfDataChanged: () => })
             fetchPatients()
             fetchPhysicians()
+            const dataObj: InitialDataType = {
+                patientName: '',
+                physicianName: '',
+                description: '',
+            }
             if (params?.patient) {
-                setPatientName(params.patient.name)
-                setPatient(params.patient)
+                const { patient } = params
+                setPatientName(patient.name)
+                dataObj.patientName = patient.name
+                setPatient(patient)
             }
             if (params?.physician) {
-                setPhysicianName(params.physician.name)
-                setPhysician(params.physician)
+                const { physician } = params
+                dataObj.physicianName = physician.name
+                setPhysicianName(physician.name)
+                setPhysician(physician)
             }
             if (params?.description) {
+                dataObj.description = params.description
                 setDescription(params.description)
             }
+            setInitialData(dataObj)
         }
     }, [params, isEditing, navigation, isFirstLoad])
 
@@ -71,24 +93,29 @@ const AddEditPrescriptionScreen: FC<Props> = props => {
     }
 
     const submitData = async () => {
+        setLoading(true)
         if (!patient || !physician || !description) {
-            setErrorMessage('Todos os campos são obrigatórios')
+            Toast.show({
+                type: 'error',
+                text1: 'Campos obrigatórios',
+                text2: 'Favor escolher o paciente, o médico e preencher a descrição',
+                autoHide: false,
+            })
+            setLoading(false)
             return
         }
-        const status = await submitPrescription(
+        const sucessfullySubmited = await submitPrescription(
             patient?.id,
             physician?.id,
             description,
             params?.prescriptionId,
             !isEditing
         )
-        if (status === 200) {
+        if (sucessfullySubmited) {
             navigation.goBack()
             return
         }
-        setErrorMessage(
-            `Ocorreu um erro ao tentar gravar os dados. - Erro - ${status}`
-        )
+        setLoading(false)
     }
 
     const isPatient = (person: Patient | Physician) => {
@@ -96,7 +123,6 @@ const AddEditPrescriptionScreen: FC<Props> = props => {
     }
 
     const handleSelection = (item: Physician | Patient) => {
-        setErrorMessage('')
         if (isPatient(item)) {
             setPatientName(item.name)
             setPatient(item as Patient)
@@ -106,6 +132,26 @@ const AddEditPrescriptionScreen: FC<Props> = props => {
         setPhysicianName(item.name)
         setPhysician(item as Physician)
         return
+    }
+    const dataHasChanged = () =>
+        initialData?.patientName != patientName ||
+        initialData?.physicianName != physicianName ||
+        initialData?.description != description
+
+    const onBack = () => {
+        if (dataHasChanged()) {
+            Alert.alert(
+                'Você tem certeza que deseja voltar?',
+                'Você perderá todas as alterações não salvas',
+                [
+                    {
+                        text: 'Sim',
+                        onPress: () => navigation.goBack(),
+                    },
+                    { text: 'Não', onPress: () => {} },
+                ]
+            )
+        }
     }
 
     return (
@@ -139,8 +185,13 @@ const AddEditPrescriptionScreen: FC<Props> = props => {
                 />
             </AutoCompletesContainer>
             <ButtonContainer>
-                <Button label='Salvar' onPress={submitData} />
-                <Button label='Cancelar' onPress={() => navigation.goBack()} />
+                <Button
+                    label='Salvar'
+                    onPress={submitData}
+                    loading={loading}
+                    disabled={!dataHasChanged()}
+                />
+                <Button label='Cancelar' onPress={onBack} disabled={loading} />
             </ButtonContainer>
         </Container>
     )

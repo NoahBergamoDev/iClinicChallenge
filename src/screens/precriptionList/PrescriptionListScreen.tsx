@@ -14,12 +14,15 @@ import {
     SearchContainer,
 } from './styles'
 import { Prescription } from '../../utils/types/Types'
+import { NavigationProp, RouteProp } from '@react-navigation/native'
 
 interface Props {
-    navigation: any
+    navigation: NavigationProp<any>
+    route: RouteProp<{ params: { deletedPrescription: number } }>
 }
 
-const PrescriptionListScreen: FC<Props> = props => {
+const PrescriptionListScreen: FC<Props> = ({ navigation, route }) => {
+    const { params } = route
     const [prescriptions, setPrescriptions] = useState<Prescription[]>([])
     const [filteredPrescriptions, setFilteredPrescriptions] = useState<
         Prescription[]
@@ -32,6 +35,15 @@ const PrescriptionListScreen: FC<Props> = props => {
     useEffect(() => {
         fetchPrescriptions()
     }, [])
+
+    useEffect(() => {
+        if (params) {
+            const { deletedPrescription } = params
+            if (params?.deletedPrescription) {
+                onDeletePrescription(deletedPrescription)
+            }
+        }
+    }, [params?.deletedPrescription])
 
     const fetchPrescriptions = async function () {
         const nextPage = currentPage + 1
@@ -48,14 +60,22 @@ const PrescriptionListScreen: FC<Props> = props => {
         setCurrentPage(nextPage)
     }
 
-    const goToDetails = (
-        prescriptionId: number | undefined,
-        crm: string | undefined
-    ) => {
-        props.navigation.navigate(
-            navigationConstants.SCREENS.PRESCRIPTION_DETAILS,
-            { prescriptionId: prescriptionId, crm: crm }
+    const goToDetails = (prescriptionId: number, crm: string | undefined) => {
+        navigation.navigate(navigationConstants.SCREENS.PRESCRIPTION_DETAILS, {
+            prescriptionId: prescriptionId,
+            crm: crm,
+        })
+    }
+
+    const onDeletePrescription = (prescriptionId: number) => {
+        const newPrescriptionArray = [...prescriptions]
+        const index = newPrescriptionArray.findIndex(
+            (p: Prescription) => prescriptionId === p.id
         )
+        if (index >= 0) {
+            newPrescriptionArray.splice(index, 1)
+        }
+        setPrescriptions(newPrescriptionArray)
     }
 
     const searchName = async () => {

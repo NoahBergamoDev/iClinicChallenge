@@ -23,7 +23,7 @@ export interface Physician {
 }
 
 export interface Prescription {
-    id: number | undefined
+    id: number 
     clinic: Clinic
     physician: Physician
     patient: Patient

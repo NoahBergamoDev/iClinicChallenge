@@ -2,7 +2,7 @@ import { NavigationProp } from '@react-navigation/native'
 import React, { useEffect } from 'react'
 import { useState } from 'react'
 import { FC } from 'react'
-import { View, Text } from 'react-native'
+import { View, Text, Alert } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import { Title, Button } from '../../components'
 import { navigationConstants } from '../../navigation/constants'
@@ -11,7 +11,11 @@ import {
     Physician,
     PrescriptionDetails,
 } from '../../utils/types/Types'
-import { getPatient, getPrescriptionDetails } from './services'
+import {
+    deletePrescription,
+    getPatient,
+    getPrescriptionDetails,
+} from './services'
 import { Container } from './styles'
 
 interface Props {
@@ -24,7 +28,7 @@ const PrescriptionDetailScreen: FC<Props> = props => {
     const {
         navigation,
         route: {
-            params: { prescriptionId, crm },
+            params: { prescriptionId, crm, onDeletePrescription },
         },
     } = props
     const [text, setText] = useState<string>('')
@@ -53,6 +57,31 @@ const PrescriptionDetailScreen: FC<Props> = props => {
             getPatientData(response.patient_id)
             getPhysicianData(response.physician_id)
         }
+    }
+
+    const onDeletePress = async () => {
+        Alert.alert(
+            'Confirmação',
+            'Você tem certeza que deseja excluir essa prescrição?',
+            [
+                {
+                    text: 'Sim',
+                    onPress: async () => {
+                        const wasDeleted = await deletePrescription(
+                            prescriptionId
+                        )
+                        if (wasDeleted)
+                            navigation.navigate(
+                                navigationConstants.SCREENS.PRESCRIPTION_LIST,
+                                {
+                                    deletedPrescription: prescriptionId,
+                                }
+                            )
+                    },
+                },
+                { text: 'Não', onPress: () => {} },
+            ]
+        )
     }
     return (
         <Container>
@@ -85,10 +114,7 @@ const PrescriptionDetailScreen: FC<Props> = props => {
                         )
                     }
                 />
-                <Button
-                    label='Excluir'
-                    onPress={() => console.log('excluir')}
-                />
+                <Button label='Excluir' onPress={onDeletePress} />
             </View>
         </Container>
     )

@@ -1,4 +1,5 @@
 import { AxiosResponse } from 'axios'
+import Toast from 'react-native-toast-message'
 import { errorHandler, getApiInstance } from '../../api/api'
 import { ServicesConstants } from '../../api/constants/constants'
 import { Patient, Physician } from '../../utils/types/Types'
@@ -26,15 +27,21 @@ export const submitPrescription = async (
         const response = isNew
             ? await api.post(url, prescription)
             : await api.put(url, prescription)
-
-        return response?.status
+        if (response.status === 200) {
+            Toast.show({
+                type: 'success',
+                text1: 'Sucesso',
+                text2: `Prescrição ${isNew ? 'cadastrada.' : 'alterada.'}`,
+            })
+            return true
+        }
+        return false
     } catch (e) {
-        console.log({ e })
         errorHandler({
             title: `Erro ao ${isNew ? 'cadastrar' : 'editar'} prescrição`,
-            message: `ERRO-${e?.response?.status || 'NO_CODE'} : ${e?.message}`,
+            message: `ERRO-${e?.response?.status} : ${e?.message}`,
         })
-        return e.response.status
+        return false
     }
 }
 
@@ -61,7 +68,10 @@ export const getPatients = async () => {
         }
         return null
     } catch (e) {
-        console.log({ e })
+        errorHandler({
+            title: 'Erro ao buscar a lista de pacientes',
+            message: `ERRO-${e?.response?.status || 'NO_CODE'} : ${e?.message}`,
+        })
         return null
     }
 }
@@ -89,7 +99,10 @@ export const getPhysicians = async () => {
         }
         return null
     } catch (e) {
-        console.log({ e })
+        errorHandler({
+            title: 'Erro ao buscar a lista de médicos',
+            message: `ERRO-${e?.response?.status || 'NO_CODE'} : ${e?.message}`,
+        })
         return null
     }
 }
