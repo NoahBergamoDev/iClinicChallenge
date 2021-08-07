@@ -1,15 +1,18 @@
 import React, { FC } from 'react'
 import { Text, TouchableOpacity } from 'react-native'
-import { colors } from '../../../utils/colors';
-import { Prescription } from '../types/PrescriptionTypes'
+import { colors } from '../../../utils/'
+import { Prescription } from '../../../utils/types/Types'
 
 interface Props {
-    prescription: Prescription;
-    onPress: () => void;
+    prescription: Prescription
+    onPress: () => void
 }
 
-const PrescriptionListItem: FC<Props> = (props) => {
-    const { onPress, prescription: { patient, physician } } = props;
+const PrescriptionListItem: FC<Props> = props => {
+    const {
+        onPress,
+        prescription: { patient, physician },
+    } = props
     return (
         <TouchableOpacity
             style={{
@@ -17,7 +20,7 @@ const PrescriptionListItem: FC<Props> = (props) => {
                 backgroundColor: 'white',
                 marginVertical: 8,
                 padding: 20,
-                borderRadius: 8
+                borderRadius: 8,
             }}
             onPress={onPress}
         >
@@ -26,7 +29,7 @@ const PrescriptionListItem: FC<Props> = (props) => {
                     fontSize: 20,
                     color: colors.BLACK,
                     fontWeight: 'bold',
-                    marginBottom: 8
+                    marginBottom: 8,
                 }}
             >
                 {patient.name}
@@ -35,17 +38,19 @@ const PrescriptionListItem: FC<Props> = (props) => {
                 style={{
                     fontSize: 16,
                     color: colors.MEDIUM_GRAY,
-                    marginBottom: 4
-                }}>
+                    marginBottom: 4,
+                }}
+            >
                 {physician.name}
             </Text>
             <Text
                 style={{
-                    fontSize:
-                        16, color: colors.MEDIUM_GRAY
-                }}>
+                    fontSize: 16,
+                    color: colors.MEDIUM_GRAY,
+                }}
+            >
                 <Text style={{ fontWeight: 'bold' }}>CRM: </Text>
-                {physician.crm.split('-', 2)[1]}
+                {physician?.crm?.split('-', 2)[1]}
             </Text>
         </TouchableOpacity>
     )

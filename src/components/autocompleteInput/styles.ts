@@ -1,5 +1,5 @@
 import styled from 'styled-components/native'
-import { colors } from '../../utils/colors'
+import { colors } from '../../utils'
 
 interface DropdownContainerProps {
     size: number
@@ -41,6 +41,6 @@ export const DropdownItemNameContainer = styled.View`
 `
 
 export const DropdownItemName = styled.Text`
-color: ${colors.DARK_GRAY};
-font-weight: bold;
+    color: ${colors.DARK_GRAY};
+    font-weight: bold;
 `

@@ -4,13 +4,13 @@ import { useState } from 'react'
 import { FC } from 'react'
 import { View, Text } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
-import { Title, Button } from '../../components/'
+import { Title, Button } from '../../components'
 import { navigationConstants } from '../../navigation/constants'
 import {
     Patient,
     Physician,
     PrescriptionDetails,
-} from '../precriptionList/types/PrescriptionTypes'
+} from '../../utils/types/Types'
 import { getPatient, getPrescriptionDetails } from './services'
 
 interface Props {
@@ -19,7 +19,7 @@ interface Props {
     navigation: NavigationProp<any, any>
 }
 
-const PrescriptionDetail: FC<Props> = props => {
+const PrescriptionDetailScreen: FC<Props> = props => {
     const {
         navigation,
         route: {
@@ -99,4 +99,4 @@ const PrescriptionDetail: FC<Props> = props => {
     )
 }
 
-export default PrescriptionDetail
+export default PrescriptionDetailScreen

@@ -1,6 +1,6 @@
 import React from 'react'
 import { ActivityIndicator } from 'react-native'
-import { colors } from '../../utils/colors'
+import { colors } from '../../utils/'
 import { ButtonContainer, ButtonText } from './style'
 
 export type Props = {

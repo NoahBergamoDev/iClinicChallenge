@@ -2,10 +2,10 @@ import { NavigationProp, Route } from '@react-navigation/native'
 import React, { FC, useEffect, useState } from 'react'
 import { KeyboardAvoidingView, Text, View } from 'react-native'
 
-import { Patient, Physician } from '../precriptionList/types/PrescriptionTypes'
+import { Patient, Physician } from '../../utils/types/Types'
 import { Button, Input, AutocompleteInput } from '../../components/'
 import { getPatients, getPhysicians, submitPrescription } from './services'
-import { colors } from '../../utils/colors'
+import { colors } from '../../utils/'
 
 interface Props {
     route: Route<any, any>
@@ -166,7 +166,13 @@ const AddEditPrescriptionScreen: FC<Props> = props => {
                 />
             </View>
             {errorMessage !== '' ? renderError() : null}
-            <View style={{ flex: errorMessage ? 0.1 : 0.2, width: '100%', alignItems: 'center' }}>
+            <View
+                style={{
+                    flex: errorMessage ? 0.1 : 0.2,
+                    width: '100%',
+                    alignItems: 'center',
+                }}
+            >
                 <Button label='Salvar' onPress={submitData} />
                 <Button label='Cancelar' onPress={() => navigation.goBack()} />
             </View>

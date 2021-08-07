@@ -5,17 +5,17 @@ import { View, Text, ListRenderItem, ActivityIndicator } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 import { Input, Button } from '../../components'
 import { navigationConstants } from '../../navigation/constants'
-import { colors } from '../../utils/colors'
+import { colors } from '../../utils/'
 import PrescriptionListItem from './components/PrescriptionListItem'
 import { getPrescriptions } from './services'
 import { Container } from './styles'
-import { Prescription } from './types/PrescriptionTypes'
+import { Prescription } from '../../utils/types/Types'
 
 interface Props {
     navigation: any
 }
 
-const PrescriptionList: FC<Props> = props => {
+const PrescriptionListScreen: FC<Props> = props => {
     const [prescriptions, setPrescriptions] = useState<Prescription[]>([])
     const [filteredPrescriptions, setFilteredPrescriptions] = useState<
         Prescription[]
@@ -133,4 +133,4 @@ const PrescriptionList: FC<Props> = props => {
     )
 }
 
-export default PrescriptionList
+export default PrescriptionListScreen

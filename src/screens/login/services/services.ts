@@ -1,29 +1,53 @@
-import { instanceAPI } from '../../../api/api';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ServicesConstants } from '../../../api/constants/constants';
+import { getApiInstance } from '../../../api/api'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { ServicesConstants } from '../../../api/constants/constants'
+import { AxiosResponse } from 'axios'
 
-export const authenticate = async (email: string, password: string) => {
-  try {
-    const body = {
-      grant_type: 'password',
-      username: email,
-      password: password,
-      client_id: 2,
-      client_secret: 'xOjzZgqTuklsZFhQWnB1CdyCGX2kQOX8v7d21wVr'
-    };
-    const response = await instanceAPI.post(
-      ServicesConstants.URL.authenticate,
-      body
-    );
+interface Body {
+    grant_type: string
+    client_id: number
+    client_secret: string
+    username?: string
+    password?: string
+    refresh_token?: string
+}
 
-    if (response.status === 200) {
-      AsyncStorage.setItem('@accessToken', response.data.access_token);
-      AsyncStorage.setItem('@refreshToken', response.data.refresh_token);
-      return response.data;
+export const authenticate = async ({
+    email,
+    password,
+    refreshToken,
+}: {
+    email?: string
+    password?: string
+    refreshToken?: string
+}) => {
+    try {
+        const api = await getApiInstance()
+
+        const body: Body = {
+            grant_type: refreshToken ? 'refresh_token' : 'password',
+            client_id: 2,
+            client_secret: 'xOjzZgqTuklsZFhQWnB1CdyCGX2kQOX8v7d21wVr',
+        }
+        if (email?.length && password?.length) {
+            body.username = email
+            body.password = password
+        } else {
+            body.refresh_token = refreshToken
+        }
+        const response: AxiosResponse = await api.post(
+            ServicesConstants.URL.authenticate,
+            body
+        )
+
+        if (response.status === 200) {
+            AsyncStorage.setItem('@accessToken', response.data.access_token)
+            AsyncStorage.setItem('@refreshToken', response.data.refresh_token)
+            return response.data
+        }
+        return null
+    } catch (e) {
+        console.log({ e })
+        return null
     }
-    return null;
-  } catch (e) {
-    console.log({ e });
-    return null;
-  }
-};
+}

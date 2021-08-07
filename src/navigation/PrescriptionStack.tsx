@@ -3,9 +3,9 @@ import { Text, TouchableOpacity } from 'react-native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { navigationConstants } from './constants'
 import {
-AddEditPrescriptionScreen,
-    PrescriptionDetail,
-    PrescriptionList,
+    AddEditPrescriptionScreen,
+    PrescriptionDetailScreen,
+    PrescriptionListScreen,
 } from '../screens'
 
 const PrescriptionStack = createNativeStackNavigator()
@@ -15,7 +15,7 @@ const PrescriptionStackComponent = () => {
         <PrescriptionStack.Navigator>
             <PrescriptionStack.Screen
                 name={navigationConstants.SCREENS.PRESCRIPTION_LIST}
-                component={PrescriptionList}
+                component={PrescriptionListScreen}
                 options={({ navigation, route }) => ({
                     title: 'Prescrições',
                     headerRight: () => (
@@ -35,7 +35,7 @@ const PrescriptionStackComponent = () => {
             />
             <PrescriptionStack.Screen
                 name={navigationConstants.SCREENS.PRESCRIPTION_DETAILS}
-                component={PrescriptionDetail}
+                component={PrescriptionDetailScreen}
                 options={() => ({
                     title: 'Detalhes da Prescrição',
                 })}

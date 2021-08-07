@@ -19,7 +19,7 @@ const LoginScreen: FC<Props> = props => {
             setErrorMessage('Favor preencher os campos.')
             return
         }
-        const authenticatedUser = await authenticate(email, password)
+        const authenticatedUser = await authenticate({ email, password })
         if (authenticatedUser) {
             props.navigation.navigate('MainStack')
         } else {
