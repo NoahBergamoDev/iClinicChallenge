@@ -21,7 +21,7 @@ interface InputStyleProps {
 
 export const InputStyle = styled.TextInput<InputStyleProps>`
     border-radius: 8px;
-    min-height: ${({ bigTextBox }) => (bigTextBox ? '200px' : '40px')};
+    min-height: ${({ bigTextBox }) => (bigTextBox ? '250px' : '40px')};
     text-align-vertical: ${({ bigTextBox }) => (bigTextBox ? 'top' : 'center')};
     border-width: 1px;
     border-color: ${colors.LIGHT_GRAY};

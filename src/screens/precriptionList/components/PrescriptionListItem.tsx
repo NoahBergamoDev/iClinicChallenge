@@ -1,7 +1,12 @@
 import React, { FC } from 'react'
-import { Text, TouchableOpacity } from 'react-native'
-import { colors } from '../../../utils/'
 import { Prescription } from '../../../utils/types/Types'
+import {
+    BoldText,
+    Container,
+    CRMText,
+    PatientNameText,
+    PhysicianNameText,
+} from './styles'
 
 interface Props {
     prescription: Prescription
@@ -14,45 +19,14 @@ const PrescriptionListItem: FC<Props> = props => {
         prescription: { patient, physician },
     } = props
     return (
-        <TouchableOpacity
-            style={{
-                flex: 1,
-                backgroundColor: 'white',
-                marginVertical: 8,
-                padding: 20,
-                borderRadius: 8,
-            }}
-            onPress={onPress}
-        >
-            <Text
-                style={{
-                    fontSize: 20,
-                    color: colors.BLACK,
-                    fontWeight: 'bold',
-                    marginBottom: 8,
-                }}
-            >
-                {patient.name}
-            </Text>
-            <Text
-                style={{
-                    fontSize: 16,
-                    color: colors.MEDIUM_GRAY,
-                    marginBottom: 4,
-                }}
-            >
-                {physician.name}
-            </Text>
-            <Text
-                style={{
-                    fontSize: 16,
-                    color: colors.MEDIUM_GRAY,
-                }}
-            >
-                <Text style={{ fontWeight: 'bold' }}>CRM: </Text>
-                {physician?.crm?.split('-', 2)[1]}
-            </Text>
-        </TouchableOpacity>
+        <Container onPress={onPress}>
+            <PatientNameText>{patient.name}</PatientNameText>
+            <PhysicianNameText>{physician.name}</PhysicianNameText>
+            <CRMText>
+                <BoldText>CRM: </BoldText>
+                {`${physician?.crm?.split('-', 2)[1].substring(0, 40)}...`}
+            </CRMText>
+        </Container>
     )
 }
 

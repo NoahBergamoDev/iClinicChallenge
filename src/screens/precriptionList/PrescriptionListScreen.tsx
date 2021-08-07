@@ -1,14 +1,18 @@
-import React, { useEffect } from 'react'
-import { useState } from 'react'
-import { FC } from 'react'
-import { View, Text, ListRenderItem, ActivityIndicator } from 'react-native'
-import { FlatList } from 'react-native-gesture-handler'
+import React, { useEffect, FC, useState } from 'react'
+import { FlatList, ListRenderItem, ActivityIndicator } from 'react-native'
+
 import { Input, Button } from '../../components'
+import PrescriptionListItem from './components/PrescriptionListItem'
+
+import { getPrescriptions } from './services'
 import { navigationConstants } from '../../navigation/constants'
 import { colors } from '../../utils/'
-import PrescriptionListItem from './components/PrescriptionListItem'
-import { getPrescriptions } from './services'
-import { Container } from './styles'
+import {
+    Container,
+    FooterContainer,
+    FooterText,
+    SearchContainer,
+} from './styles'
 import { Prescription } from '../../utils/types/Types'
 
 interface Props {
@@ -33,7 +37,10 @@ const PrescriptionListScreen: FC<Props> = props => {
         const nextPage = currentPage + 1
         const response = await getPrescriptions(nextPage)
         if (response) {
-            const newPrescription = [...prescriptions, ...response.data]
+            const newPrescription =
+                nextPage === 1
+                    ? response.data
+                    : [...prescriptions, ...response.data]
             setPrescriptions(newPrescription)
             if (response.meta.last_page != maxPages)
                 setMaxPages(response.meta.last_page)
@@ -80,29 +87,21 @@ const PrescriptionListScreen: FC<Props> = props => {
         const isFinalPage = currentPage === maxPages
         if (isFinalPage) {
             return (
-                <View
-                    style={{
-                        flex: 1,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        paddingVertical: 4,
-                        height: 40,
-                    }}
-                >
-                    <Text style={{ color: colors.MEDIUM_GRAY }}>
+                <FooterContainer>
+                    <FooterText>
                         Esse é o final da lista de prescrições
-                    </Text>
-                </View>
+                    </FooterText>
+                </FooterContainer>
             )
         }
         if (inputText != '') return null
 
-        return <ActivityIndicator size='small' color='red' />
+        return <ActivityIndicator size='small' color={colors.PRIMARY_BLUE} />
     }
 
     return (
         <Container>
-            <View style={{ width: '100%', alignItems: 'center' }}>
+            <SearchContainer>
                 <Input
                     label='Buscar'
                     onChangeText={text => handleInput(text)}
@@ -114,7 +113,7 @@ const PrescriptionListScreen: FC<Props> = props => {
                     loading={loading}
                     disabled={loading}
                 />
-            </View>
+            </SearchContainer>
             <FlatList
                 data={
                     filteredPrescriptions.length > 0
@@ -122,11 +121,16 @@ const PrescriptionListScreen: FC<Props> = props => {
                         : prescriptions
                 }
                 renderItem={renderPrescriptionItem}
+                extraData={
+                    filteredPrescriptions.length > 0
+                        ? prescriptions
+                        : filteredPrescriptions
+                }
                 onEndReached={() => {
                     if (currentPage < maxPages && inputText === '')
                         fetchPrescriptions()
                 }}
-                onEndReachedThreshold={0.5}
+                onEndReachedThreshold={0.1}
                 ListFooterComponent={renderListFooterComponent}
             />
         </Container>

@@ -1,5 +1,5 @@
-import {  AxiosResponse } from 'axios'
-import { getApiInstance } from '../../api/api'
+import { AxiosResponse } from 'axios'
+import { errorHandler, getApiInstance } from '../../api/api'
 import { ServicesConstants } from '../../api/constants/constants'
 import { Patient, Physician } from '../../utils/types/Types'
 
@@ -30,6 +30,10 @@ export const submitPrescription = async (
         return response?.status
     } catch (e) {
         console.log({ e })
+        errorHandler({
+            title: `Erro ao ${isNew ? 'cadastrar' : 'editar'} prescrição`,
+            message: `ERRO-${e?.response?.status || 'NO_CODE'} : ${e?.message}`,
+        })
         return e.response.status
     }
 }

@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import axios, { AxiosInstance } from 'axios'
+import axios, { AxiosError, AxiosInstance } from 'axios'
+import Toast from 'react-native-toast-message'
 import { authenticate } from '../screens/login/services/services'
 
 let instance: AxiosInstance | null = null
@@ -19,8 +20,6 @@ export const getApiInstance = async () => {
     instance.interceptors.request.use(
         async config => {
             const accessToken = await AsyncStorage.getItem('@accessToken')
-            const refreshToken = await AsyncStorage.getItem('@refreshToken')
-            console.log(refreshToken)
             config.headers = {
                 Accept: 'application/json',
             }
@@ -45,15 +44,30 @@ export const getApiInstance = async () => {
                 const refreshToken = await AsyncStorage.getItem('@refreshToken')
                 if (refreshToken) authenticate({ refreshToken })
 
-                return (
-                    instance &&
-                    instance(originalRequest)
-                        .then(resp => console.log({ resp }))
-                        .catch(error => console.log({ error }))
-                )
+                return instance && instance(originalRequest)
             }
             return Promise.reject(error)
         }
     )
     return instance
+}
+
+export const errorHandler = ({
+    title,
+    message,
+    autoHide,
+}: {
+    title?: string
+    message?: string
+    autoHide?: boolean
+}) => {
+    Toast.show({
+        type: 'error',
+        text1: title || 'Houve um problema com a requisição',
+        text2: `${
+            message ||
+            'Houve um erro inesperado, tente novamente em alguns instantes...'
+        } `,
+        autoHide,
+    })
 }

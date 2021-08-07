@@ -1,7 +1,10 @@
 import styled from 'styled-components/native'
 import { colors } from '../../utils/'
 
-export const ButtonContainer = styled.TouchableOpacity`
+interface ButtonProps {
+    loading?: boolean
+}
+export const ButtonContainer = styled.TouchableOpacity<ButtonProps>`
     width: 90%;
     height: 50px;
     border-radius: 8px;
@@ -10,7 +13,9 @@ export const ButtonContainer = styled.TouchableOpacity`
     padding: 8px;
     margin: 16px 0px;
     background-color: ${props =>
-        props.disabled ? colors.LIGHT_GRAY : colors.PRIMARY_BLUE};
+        props.disabled && !props.loading
+            ? colors.LIGHT_GRAY
+            : colors.PRIMARY_BLUE};
 `
 
 export const ButtonText = styled.Text`

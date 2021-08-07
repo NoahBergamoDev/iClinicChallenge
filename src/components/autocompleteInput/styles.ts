@@ -10,10 +10,7 @@ export const DropdownContainer = styled.View<DropdownContainerProps>`
     top: 75px;
     bottom: 0;
     width: 90%;
-    height: ${(props: DropdownContainerProps) => {
-        console.log({ props })
-        return `${50 * props.size}px`
-    }};
+    height: ${(props: DropdownContainerProps) => `${50 * props.size}px`};
     max-height: 250px;
     background-color: ${colors.WHITE};
     z-index: 1;

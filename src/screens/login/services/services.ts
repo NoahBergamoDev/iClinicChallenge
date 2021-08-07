@@ -1,4 +1,4 @@
-import { getApiInstance } from '../../../api/api'
+import { errorHandler, getApiInstance } from '../../../api/api'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { ServicesConstants } from '../../../api/constants/constants'
 import { AxiosResponse } from 'axios'
@@ -47,7 +47,9 @@ export const authenticate = async ({
         }
         return null
     } catch (e) {
-        console.log({ e })
+        let message = ''
+        if (e.response.status === 400) message = 'Usuário ou senha inválidos'
+        errorHandler({ message })
         return null
     }
 }

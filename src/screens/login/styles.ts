@@ -7,9 +7,9 @@ export const Container = styled.View`
     align-items: center;
     justify-content: center;
 `
-export const ErrorText = styled.Text`
-    font-size: 20px;
-    font-weight: bold;
-    color: ${colors.RED};
-    margin-top: 16px;
+
+export const ButtonContainer = styled.View`
+    width: 100%;
+    align-items: center;
+    margin-top: 32px;
 `

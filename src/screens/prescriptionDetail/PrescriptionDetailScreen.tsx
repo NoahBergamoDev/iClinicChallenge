@@ -12,6 +12,7 @@ import {
     PrescriptionDetails,
 } from '../../utils/types/Types'
 import { getPatient, getPrescriptionDetails } from './services'
+import { Container } from './styles'
 
 interface Props {
     prescriptionId: number
@@ -54,13 +55,7 @@ const PrescriptionDetailScreen: FC<Props> = props => {
         }
     }
     return (
-        <View
-            style={{
-                flex: 1,
-                marginHorizontal: 16,
-                justifyContent: 'space-between',
-            }}
-        >
+        <Container>
             <ScrollView>
                 <Title text='Médico' left />
                 <Text>CRM: {crm.split('-')[1]}</Text>
@@ -95,7 +90,7 @@ const PrescriptionDetailScreen: FC<Props> = props => {
                     onPress={() => console.log('excluir')}
                 />
             </View>
-        </View>
+        </Container>
     )
 }
 

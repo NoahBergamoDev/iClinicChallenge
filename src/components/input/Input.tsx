@@ -17,11 +17,6 @@ interface Props {
     flatBottom?: boolean
 }
 
-const flatBottomBorder = {
-    borderBottomRightRadius: 0,
-    borderBottomLeftRadius: 0,
-}
-
 const Input: FC<Props> = ({
     label,
     placeholder,

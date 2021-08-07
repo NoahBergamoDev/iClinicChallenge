@@ -17,9 +17,13 @@ const Button: React.FC<Props> = ({
     loading = false,
 }) => {
     return (
-        <ButtonContainer disabled={disabled} onPress={onPress}>
+        <ButtonContainer
+            disabled={disabled || loading}
+            onPress={onPress}
+            loading={loading}
+        >
             {loading ? (
-                <ActivityIndicator size='small' color={colors.PRIMARY_BLUE} />
+                <ActivityIndicator size='small' color={colors.WHITE} />
             ) : (
                 <ButtonText>{label}</ButtonText>
             )}

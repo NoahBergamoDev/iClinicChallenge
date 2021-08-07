@@ -1,11 +1,10 @@
-import { NavigationProp, Route } from '@react-navigation/native'
 import React, { FC, useEffect, useState } from 'react'
-import { KeyboardAvoidingView, Text, View } from 'react-native'
+import { NavigationProp, Route } from '@react-navigation/native'
 
 import { Patient, Physician } from '../../utils/types/Types'
 import { Button, Input, AutocompleteInput } from '../../components/'
 import { getPatients, getPhysicians, submitPrescription } from './services'
-import { colors } from '../../utils/'
+import { AutoCompletesContainer, ButtonContainer, Container } from './styles'
 
 interface Props {
     route: Route<any, any>
@@ -36,7 +35,6 @@ const AddEditPrescriptionScreen: FC<Props> = props => {
 
     useEffect(() => {
         if (isFirstLoad) {
-            console.log('Loaded.')
             setIsFirstLoad(false)
             navigation.setOptions({
                 headerTitle: isEditing
@@ -110,35 +108,12 @@ const AddEditPrescriptionScreen: FC<Props> = props => {
         return
     }
 
-    const renderError = () => (
-        <View
-            style={{
-                flex: 0.1,
-                width: '100%',
-                alignItems: 'center',
-            }}
-        >
-            <Text
-                style={{
-                    color: colors.RED,
-                    fontSize: 18,
-                    fontWeight: 'bold',
-                }}
-            >
-                {errorMessage}
-            </Text>
-        </View>
-    )
-
     return (
-        <KeyboardAvoidingView
-            style={{ flex: 1, alignItems: 'center', paddingVertical: 20 }}
-        >
-            <View
-                style={{
-                    flex: 0.7,
-                    width: '100%',
+        <Container>
+            <AutoCompletesContainer
+                contentContainerStyle={{
                     alignItems: 'center',
+                    paddingBottom: 20,
                 }}
             >
                 <AutocompleteInput
@@ -148,7 +123,6 @@ const AddEditPrescriptionScreen: FC<Props> = props => {
                     label='Pacientes'
                     disabled={isEditing}
                 />
-                <View style={{ height: 16 }} />
                 <AutocompleteInput
                     data={physicians}
                     inputText={physicianName}
@@ -156,7 +130,6 @@ const AddEditPrescriptionScreen: FC<Props> = props => {
                     label='Médicos'
                     disabled={isEditing}
                 />
-                <View style={{ height: 16 }} />
                 <Input
                     label='Descrição'
                     onChangeText={text => setDescription(text)}
@@ -164,19 +137,12 @@ const AddEditPrescriptionScreen: FC<Props> = props => {
                     multiline
                     bigTextBox
                 />
-            </View>
-            {errorMessage !== '' ? renderError() : null}
-            <View
-                style={{
-                    flex: errorMessage ? 0.1 : 0.2,
-                    width: '100%',
-                    alignItems: 'center',
-                }}
-            >
+            </AutoCompletesContainer>
+            <ButtonContainer>
                 <Button label='Salvar' onPress={submitData} />
                 <Button label='Cancelar' onPress={() => navigation.goBack()} />
-            </View>
-        </KeyboardAvoidingView>
+            </ButtonContainer>
+        </Container>
     )
 }
 
