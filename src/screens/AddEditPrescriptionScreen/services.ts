@@ -37,6 +37,7 @@ export const submitPrescription = async (
         }
         return false
     } catch (e) {
+        
         errorHandler({
             title: `Erro ao ${isNew ? 'cadastrar' : 'editar'} prescrição`,
             message: `ERRO-${e?.response?.status} : ${e?.message}`,

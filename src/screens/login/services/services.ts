@@ -32,9 +32,9 @@ export const authenticate = async ({
         if (email?.length && password?.length) {
             body.username = email
             body.password = password
-        } else {
-            body.refresh_token = refreshToken
         }
+        if (refreshToken) body.refresh_token = refreshToken
+        
         const response: AxiosResponse = await api.post(
             ServicesConstants.URL.authenticate,
             body

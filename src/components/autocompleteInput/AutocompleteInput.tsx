@@ -20,7 +20,7 @@ const AutocompleteInput: FC<AutoCompleteProps> = props => {
         expanded,
         filteredData,
         inputHandler,
-        handleSelection,
+        handleSelection
     } = useAutoCompleteInput(props) // importing state and props from an custom hooks, to separate logic from UI components.
 
     return (
@@ -31,6 +31,7 @@ const AutocompleteInput: FC<AutoCompleteProps> = props => {
                 value={text}
                 flatBottom={expanded}
                 disabled={data.length === 0 || disabled}
+                placeholder={!data.length ? 'carregando opções...' : ''}
             />
             {expanded && (
                 <DropdownContainer size={filteredData.length}>
