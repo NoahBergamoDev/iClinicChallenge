@@ -2,9 +2,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { NavigationProp } from '@react-navigation/native'
 import React, { useEffect } from 'react'
 import { FC } from 'react'
-import { View } from 'react-native'
+import { Platform, View } from 'react-native'
+import Toast from 'react-native-toast-message'
+import { errorHandler } from '../../api/api'
 import { Button, Title } from '../../components'
 import { navigationConstants } from '../../navigation/constants'
+import useHomeScreen, { HomeScreenProps } from './useHomeScreen'
 
 interface Props {
     navigation: NavigationProp<any>
@@ -16,31 +19,8 @@ interface Button {
     onPress: () => void
 }
 
-const HomeScreen: FC<Props> = ({ navigation }) => {
-    useEffect(() => {
-        verifyLogin()
-    }, [])
-
-    const logout = async () => {
-        await AsyncStorage.clear()
-        navigation.navigate(navigationConstants.STACKS.AUTH)
-    }
-
-    const verifyLogin = async () => {
-        const isLoggedIn = (await AsyncStorage.getItem('@accessToken')) != null
-        if (!isLoggedIn) navigation.navigate(navigationConstants.STACKS.AUTH)
-    }
-    const buttons: Button[] = [
-        {
-            id: 0,
-            label: '+ Prescrição (React Native)',
-            onPress: () => navigation.navigate('PrescriptionStack'),
-        },
-        { id: 1, label: '+ Médico (Android Nativo)', onPress: () => {} }, //TODO: Call an Android (Kotlin) screen
-        { id: 2, label: '+ Paciente (iOS Nativo)', onPress: () => {} }, //TODO: Call an iOS (Swift) screen
-        { id: 3, label: 'Sair', onPress: logout },
-    ]
-
+const HomeScreen: FC<HomeScreenProps> = props => {
+    const { buttons } = useHomeScreen(props)
     return (
         <View
             style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}

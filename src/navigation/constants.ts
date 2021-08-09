@@ -1,7 +1,8 @@
 export const navigationConstants = {
   STACKS: {
     AUTH: 'AuthStack',
-    MAIN: 'MainStack'
+    MAIN: 'MainStack',
+    PRESCRIPTION_STACK: 'PrescriptionStack'
   },
   SCREENS: {
     PRESCRIPTION_LIST: 'PrescriptionListScreen',
@@ -9,6 +10,7 @@ export const navigationConstants = {
     ADD_EDIT_PRESCRIPTION: 'AddEditPrescriptionScreen',
     LOGIN: 'LoginScreen',
     SIGN_UP: 'SignUpScreen',
-    SPLASH_SCREEN: 'SplashScreen'
+    SPLASH_SCREEN: 'SplashScreen',
+    ADD_PHYSICIAN: 'AddPhysicianScreen'
   }
 };

@@ -1,27 +1,19 @@
 package com.iclinicchallenge;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 
-import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
-import com.facebook.react.bridge.ReactMethod;
 
-public class AddPhysicianModule extends ReactContextBaseJavaModule {
+public class AddPhysicianModule  extends ReactContextBaseJavaModule {
+    protected static String MODULE_NAME = "AddPhysicianModule";
 
-    private static ReactApplicationContext reactContext;
-    private static String TAG = "AddPhysicianModule";
-
-    AddPhysicianModule(ReactApplicationContext context){
-        super(context);
-        reactContext = context;
+    public AddPhysicianModule(ReactApplicationContext reactContext) {
+        super(reactContext);
     }
 
-    @NonNull
     @Override
     public String getName() {
-        return TAG;
+        return MODULE_NAME;
     }
 }

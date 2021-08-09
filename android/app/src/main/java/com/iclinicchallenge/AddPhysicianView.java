@@ -1,16 +1,23 @@
 package com.iclinicchallenge;
 
 import android.content.Context;
-import android.view.LayoutInflater;
-import android.widget.LinearLayout;
+import android.widget.FrameLayout;
 
-import androidx.annotation.NonNull;
+import com.facebook.react.bridge.ReactContext;
 
-public class AddPhysicianView  extends LinearLayout {
-    private Context context;
-    public AddPhysicianView(@NonNull Context context) {
+
+public class AddPhysicianView extends FrameLayout {
+    private ReactContext rcContext;
+    public AddPhysicianView(ReactContext context){
         super(context);
-        this.context = context;
-        inflate(context, R.layout.addphysician, this);
+        this.rcContext = context;
+        this.init();
     }
+
+
+
+    public void init(){
+        inflate(rcContext, R.layout.addphysician, this);
+    }
+
 }

@@ -1,7 +1,5 @@
 package com.iclinicchallenge;
 
-import androidx.annotation.NonNull;
-
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -9,23 +7,23 @@ import com.facebook.react.uimanager.ViewManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class AddPhysicianPackage implements ReactPackage {
-    @NonNull
+    private static String MODULE_NAME = "AddPhysicianModule";
+
     @Override
-    public List<NativeModule> createNativeModules(@NonNull ReactApplicationContext reactContext) {
-        List<NativeModule> modules = new ArrayList<NativeModule>();
-        modules.add(new AddPhysicianModule(reactContext));
-        return modules;
+    public List<ViewManager> createViewManagers(
+            ReactApplicationContext reactContext) {
+        return Arrays.<ViewManager>asList(
+                new AddPhysicianManager(reactContext)
+        );
     }
 
-    @NonNull
     @Override
-    public List<ViewManager> createViewManagers(@NonNull ReactApplicationContext reactContext) {
-        List<ViewManager> viewManagers = new ArrayList<ViewManager>();
-        viewManagers.add(new AddPhysicianViewManager());
-        return viewManagers;
+    public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
+        List<NativeModule> modules = new ArrayList<>();
+        modules.add(new AddPhysicianModule(reactContext));
+        return modules;
     }
 }
