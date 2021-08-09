@@ -1,11 +1,8 @@
-import React, { useEffect, FC, useState } from 'react'
+import React, { FC } from 'react'
 import { FlatList, ListRenderItem, ActivityIndicator } from 'react-native'
 
 import { Input, Button } from '../../components'
 import PrescriptionListItem from './components/PrescriptionListItem'
-
-import { getPrescriptions } from './services'
-import { navigationConstants } from '../../navigation/constants'
 import { colors } from '../../utils/'
 import {
     Container,
@@ -14,7 +11,6 @@ import {
     SearchContainer,
 } from './styles'
 import { Prescription } from '../../utils/types/Types'
-import { NavigationProp, RouteProp } from '@react-navigation/native'
 import usePrescriptionListScreen, {
     PrescriptionListScreenProps,
 } from './usePrescriptionListScreen'
@@ -32,7 +28,7 @@ const PrescriptionListScreen: FC<PrescriptionListScreenProps> = props => {
         filteredPrescriptions,
         prescriptions,
     } = usePrescriptionListScreen(props)
-    
+
     const renderPrescriptionItem: ListRenderItem<Prescription> = ({ item }) => (
         <PrescriptionListItem
             prescription={item}
