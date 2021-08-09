@@ -9,8 +9,8 @@ interface Props {
 }
 
 const Title: FC<Props> = props => {
-    const { left } = props
-    return <TitleText left={left}>{props.text}</TitleText>
+    const { left, text } = props
+    return <TitleText left={left}>{text}</TitleText>
 }
 
 export default Title
