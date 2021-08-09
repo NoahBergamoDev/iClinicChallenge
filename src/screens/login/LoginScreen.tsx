@@ -1,10 +1,12 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { Button, Input, Title } from '../../components/'
 import { ButtonContainer, Container } from './styles'
 import { authenticate } from './services/services'
 import Toast from 'react-native-toast-message'
 import { errorHandler } from '../../api/api'
 
+import { requireNativeComponent } from 'react-native'
+const AddPhysician = requireNativeComponent('AddPhysicianViewManager')
 interface Props {
     navigation: any
 }
@@ -45,24 +47,25 @@ const LoginScreen: FC<Props> = props => {
     }
 
     return (
-        <Container>
-            <Title text='Mobile Challenge' />
-            <Input
-                onChangeText={text => handleInput(text, 'email')}
-                value={email}
-                label='Login'
-                keyboardType={'email-address'}
-            />
-            <Input
-                onChangeText={text => handleInput(text, 'password')}
-                value={password}
-                label='Senha'
-                secureTextEntry
-            />
-            <ButtonContainer>
-                <Button onPress={login} label='Login' loading={loading} />
-            </ButtonContainer>
-        </Container>
+        <AddPhysician />
+        // <Container>
+        //     <Title text='Mobile Challenge' />
+        //     <Input
+        //         onChangeText={(text: string) => handleInput(text, 'email')}
+        //         value={email}
+        //         label='Login'
+        //         keyboardType={'email-address'}
+        //     />
+        //     <Input
+        //         onChangeText={(text: string) => handleInput(text, 'password')}
+        //         value={password}
+        //         label='Senha'
+        //         secureTextEntry
+        //     />
+        //     <ButtonContainer>
+        //         <Button onPress={login} label='Login' loading={loading} />
+        //     </ButtonContainer>
+        // </Container>
     )
 }
 
